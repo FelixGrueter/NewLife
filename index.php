@@ -1,3 +1,7 @@
+<?php
+session_start();
+$_SESSION['form_time'] = time();
+?>
 <!DOCTYPE html>
 <html lang="de">
 
@@ -1404,6 +1408,49 @@
         margin-top: var(--space-4);
       }
     }
+
+    /* ============================================
+   FORM: TEXTAREA
+   ============================================ */
+    textarea.form-control {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.65;
+    }
+
+    /* ============================================
+   FORM: FEEDBACK (Erfolg / Fehler)
+   ============================================ */
+    .contact-modal__feedback {
+      display: none;
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius);
+      font-size: var(--text-sm);
+      line-height: 1.55;
+      margin-bottom: var(--space-4);
+    }
+
+    .contact-modal__feedback--success {
+      display: block;
+      background: rgba(168, 198, 134, 0.12);
+      border: 1px solid rgba(168, 198, 134, 0.35);
+      color: var(--color-accent);
+    }
+
+    .contact-modal__feedback--error {
+      display: block;
+      background: rgba(220, 80, 60, 0.08);
+      border: 1px solid rgba(220, 80, 60, 0.3);
+      color: #e07060;
+    }
+
+    /* Submit-Button: disabled state */
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
   </style>
 </head>
 
@@ -1716,13 +1763,13 @@
       <div class="cta-section__buttons">
         <a href="#" class="btn btn--primary" id="openContactBtn" data-i18n="cta_btn1">Gemeinde finden <span
             class="btn__arrow">→</span></a>
-        <a href="mailto:info@newlife-international.org" class="btn btn--outline" data-i18n="cta_btn2">Kontakt
+        <a href="#" class="btn btn--outline" id="openContactBtn2" data-i18n="cta_btn2">Kontakt
           aufnehmen</a>
       </div>
     </div>
   </section>
 
-  <!-- CONTACT MODAL -->
+  <!-- CONTACT MODAL 1: Gemeinde finden -->
   <div class="contact-modal" id="contactModal">
     <div class="contact-modal__content">
       <button class="contact-modal__close" id="closeContactBtn">&times;</button>
@@ -1731,25 +1778,29 @@
         Wir verknüpfen dich gerne mit einem lokalen Pastor einer Hausgemeinde in deiner Nähe und dieser wird sich bei
         dir melden.
       </p>
-      <form class="contact-form" id="contactForm">
+      <div class="contact-modal__feedback" id="findFeedback"></div>
+      <form class="contact-form" id="contactForm" novalidate>
+        <!-- Honeypot: für Menschen unsichtbar, Bots füllen es aus -->
+        <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="form_type" value="gemeinde_finden">
         <div class="form-group">
-          <label for="name" data-i18n="mod_lbl_name">Name</label>
-          <input type="text" id="name" class="form-control" required data-i18n-placeholder="mod_ph_name"
-            placeholder="Dein Vor- und Nachname">
+          <label for="find_name" data-i18n="mod_lbl_name">Name</label>
+          <input type="text" id="find_name" name="name" class="form-control" required
+            data-i18n-placeholder="mod_ph_name" placeholder="Dein Vor- und Nachname">
         </div>
         <div class="form-group">
-          <label for="email" data-i18n="mod_lbl_email">E-Mail</label>
-          <input type="email" id="email" class="form-control" required data-i18n-placeholder="mod_ph_email"
-            placeholder="deine@email.de">
+          <label for="find_email" data-i18n="mod_lbl_email">E-Mail</label>
+          <input type="email" id="find_email" name="email" class="form-control" required
+            data-i18n-placeholder="mod_ph_email" placeholder="deine@email.de">
         </div>
         <div class="form-group">
-          <label for="phone" data-i18n="mod_lbl_phone">Telefonnr</label>
-          <input type="tel" id="phone" class="form-control" required data-i18n-placeholder="mod_ph_phone"
-            placeholder="+49 123 456789">
+          <label for="find_phone" data-i18n="mod_lbl_phone">Telefonnr</label>
+          <input type="tel" id="find_phone" name="phone" class="form-control" required
+            data-i18n-placeholder="mod_ph_phone" placeholder="+49 123 456789">
         </div>
         <div class="form-group">
           <label for="countryCode" data-i18n="mod_lbl_country">Land</label>
-          <select id="countryCode" class="form-select" data-i18n-select="true">
+          <select id="countryCode" name="country" class="form-select" data-i18n-select="true">
             <option value="de">Deutschland</option>
             <option value="ch">Schweiz</option>
             <option value="at">Österreich</option>
@@ -1760,18 +1811,53 @@
         <div class="form-row">
           <div class="form-group" style="flex: 0 0 100px;">
             <label for="plz" data-i18n="mod_lbl_zip">PLZ</label>
-            <input type="text" id="plz" class="form-control" required data-i18n-placeholder="mod_ph_zip"
-              placeholder="12345">
+            <input type="text" id="plz" name="plz" class="form-control" required
+              data-i18n-placeholder="mod_ph_zip" placeholder="12345">
           </div>
           <div class="form-group" style="flex: 1 1 180px;">
             <label for="ort" data-i18n="mod_lbl_city">Ort</label>
-            <input type="text" id="ort" class="form-control" required data-i18n-placeholder="mod_ph_city"
-              placeholder="Stadt">
+            <input type="text" id="ort" name="ort" class="form-control" required
+              data-i18n-placeholder="mod_ph_city" placeholder="Stadt">
           </div>
         </div>
-        <button type="button" class="btn btn--primary" data-i18n="mod_btn"
-          onclick="document.getElementById('contactForm').reset(); document.getElementById('closeContactBtn').click();">Anfrage
-          senden <span class="btn__arrow">→</span></button>
+        <button type="button" id="findSubmitBtn" class="btn btn--primary" data-i18n="mod_btn">
+          Anfrage senden <span class="btn__arrow">→</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CONTACT MODAL 2: Kontakt aufnehmen -->
+  <div class="contact-modal" id="contactModal2">
+    <div class="contact-modal__content">
+      <button class="contact-modal__close" id="closeContactBtn2">&times;</button>
+      <h3 class="contact-modal__title" data-i18n="kon_title">Kontakt aufnehmen</h3>
+      <p class="contact-modal__note" data-i18n="kon_note">
+        Hast du Fragen, ein Anliegen oder möchtest du dich einfach melden? Wir freuen uns über deine Nachricht.
+      </p>
+      <div class="contact-modal__feedback" id="kontaktFeedback"></div>
+      <form class="contact-form" id="kontaktForm" novalidate>
+        <!-- Honeypot: für Menschen unsichtbar, Bots füllen es aus -->
+        <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="form_type" value="kontakt">
+        <div class="form-group">
+          <label for="kon_name" data-i18n="kon_lbl_name">Name</label>
+          <input type="text" id="kon_name" name="name" class="form-control" required
+            data-i18n-placeholder="kon_ph_name" placeholder="Dein Vor- und Nachname">
+        </div>
+        <div class="form-group">
+          <label for="kon_email" data-i18n="kon_lbl_email">E-Mail</label>
+          <input type="email" id="kon_email" name="email" class="form-control" required
+            data-i18n-placeholder="kon_ph_email" placeholder="deine@email.de">
+        </div>
+        <div class="form-group">
+          <label for="kon_message" data-i18n="kon_lbl_message">Nachricht</label>
+          <textarea id="kon_message" name="message" class="form-control" rows="5" required
+            data-i18n-placeholder="kon_ph_message" placeholder="Deine Nachricht..."></textarea>
+        </div>
+        <button type="button" id="kontaktSubmitBtn" class="btn btn--primary" data-i18n="kon_btn">
+          Nachricht senden <span class="btn__arrow">→</span>
+        </button>
       </form>
     </div>
   </div>
@@ -1800,7 +1886,7 @@
             <li><a href="#" class="footer__link" data-i18n="nav_find_church">Gemeinde finden</a></li>
             <li><a href="#" class="footer__link" data-i18n="foot_col2_item2">Gemeinde gründen</a></li>
             <li><a href="#" class="footer__link" data-i18n="foot_col2_item3">Taufe</a></li>
-            <li><a href="#" class="footer__link">Kontakt</a></li>
+            <li><a href="#" class="footer__link footer-kontakt-link">Kontakt</a></li>
           </ul>
         </div>
         <div>
@@ -1990,53 +2076,183 @@
     });
 
     /* ============================================
-       CONTACT MODAL & PLZ AUTOFILL
+       HILFSFUNKTION: Aktuellen Übersetzungsschlüssel holen
        ============================================ */
-    const contactModal = document.getElementById('contactModal');
-    const closeContactBtn = document.getElementById('closeContactBtn');
-    const openContactBtn = document.getElementById('openContactBtn');
-    const openContactCard = document.getElementById('openContactCard');
-    const countryCode = document.getElementById('countryCode');
-    const plzInput = document.getElementById('plz');
-    const ortInput = document.getElementById('ort');
+    function t(key) {
+      const lang = document.documentElement.lang || 'de';
+      return (typeof languageData !== 'undefined' && languageData[lang] && languageData[lang][key])
+        ? languageData[lang][key]
+        : key;
+    }
 
-    function openModal() {
-      contactModal.classList.add('active');
+    /* ============================================
+       MODAL ÖFFNEN / SCHLIESSEN (generisch)
+       ============================================ */
+    function openModal(modalEl) {
+      modalEl.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    if (openContactBtn && contactModal) {
-      openContactBtn.addEventListener('click', (e) => {
+    function closeModal(modalEl) {
+      modalEl.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    const contactModal  = document.getElementById('contactModal');
+    const contactModal2 = document.getElementById('contactModal2');
+
+    // Modal 1 öffnen
+    document.getElementById('openContactBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(contactModal);
+    });
+    document.getElementById('openContactCard')?.addEventListener('click', () => {
+      openModal(contactModal);
+    });
+
+    // Modal 2 öffnen (CTA + Footer)
+    document.getElementById('openContactBtn2')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(contactModal2);
+    });
+    document.querySelectorAll('.footer-kontakt-link').forEach(link => {
+      link.addEventListener('click', (e) => {
         e.preventDefault();
-        openModal();
+        openModal(contactModal2);
       });
+    });
 
-      closeContactBtn.addEventListener('click', () => {
-        contactModal.classList.remove('active');
-        document.body.style.overflow = '';
-      });
+    // Schließen via × Button
+    document.getElementById('closeContactBtn')?.addEventListener('click',  () => closeModal(contactModal));
+    document.getElementById('closeContactBtn2')?.addEventListener('click', () => closeModal(contactModal2));
 
-      contactModal.addEventListener('click', (e) => {
-        if (e.target === contactModal) {
-          contactModal.classList.remove('active');
-          document.body.style.overflow = '';
+    // Schließen via Backdrop-Klick
+    contactModal?.addEventListener('click',  (e) => { if (e.target === contactModal)  closeModal(contactModal); });
+    contactModal2?.addEventListener('click', (e) => { if (e.target === contactModal2) closeModal(contactModal2); });
+
+    // Schließen via Escape-Taste
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal(contactModal);
+        closeModal(contactModal2);
+      }
+    });
+
+    /* ============================================
+       FORM SUBMIT (generische Handler-Funktion)
+       ============================================ */
+    async function handleFormSubmit(formEl, feedbackEl, btnEl, successKey) {
+      // Einfache Frontend-Validierung
+      const inputs = formEl.querySelectorAll('[required]');
+      let valid = true;
+      inputs.forEach(input => {
+        if (!input.value.trim() || (input.type === 'email' && !input.value.includes('@'))) {
+          valid = false;
         }
       });
+      if (!valid) {
+        showFeedback(feedbackEl, 'error', t('form_error_fields'));
+        return;
+      }
+
+      // Loading-Zustand
+      const originalHTML = btnEl.innerHTML;
+      btnEl.disabled = true;
+      btnEl.textContent = t('form_submitting');
+
+      // Feedback zurücksetzen
+      feedbackEl.className = 'contact-modal__feedback';
+      feedbackEl.innerHTML = '';
+
+      try {
+        const res = await fetch('contact.php', {
+          method: 'POST',
+          body: new FormData(formEl)
+        });
+
+        let data;
+        try {
+          data = await res.json();
+        } catch {
+          throw new Error('invalid_json');
+        }
+
+        if (data.success) {
+          showFeedback(feedbackEl, 'success', t(successKey));
+          formEl.reset();
+          // Modal nach 3 s automatisch schließen
+          setTimeout(() => {
+            const modal = formEl.closest('.contact-modal');
+            if (modal) closeModal(modal);
+            feedbackEl.className = 'contact-modal__feedback';
+            feedbackEl.innerHTML = '';
+          }, 3000);
+        } else {
+          // Spezifische Serverfehlermeldungen übersetzen
+          let msg = data.message || t('form_error_server');
+          if (res.status === 429) msg = t('form_error_wait');
+          if (res.status === 400 && msg.includes('Felder')) msg = t('form_error_fields');
+          showFeedback(feedbackEl, 'error', msg);
+        }
+      } catch (err) {
+        showFeedback(feedbackEl, 'error', t('form_error_connection'));
+      } finally {
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalHTML;
+      }
     }
 
-    if (openContactCard && contactModal) {
-      openContactCard.addEventListener('click', () => {
-        openModal();
-      });
+    function showFeedback(el, type, msg) {
+      el.className = 'contact-modal__feedback contact-modal__feedback--' + type;
+      el.innerHTML = (type === 'success' ? '✓ ' : '⚠ ') + msg;
     }
 
-    // Fetch all countries for the dropdown dynamically
+    /* ============================================
+       FORM 1: Gemeinde finden
+       ============================================ */
+    document.getElementById('findSubmitBtn')?.addEventListener('click', () => {
+      handleFormSubmit(
+        document.getElementById('contactForm'),
+        document.getElementById('findFeedback'),
+        document.getElementById('findSubmitBtn'),
+        'form_success_find'
+      );
+    });
+
+    /* ============================================
+       FORM 2: Kontakt
+       ============================================ */
+    document.getElementById('kontaktSubmitBtn')?.addEventListener('click', () => {
+      handleFormSubmit(
+        document.getElementById('kontaktForm'),
+        document.getElementById('kontaktFeedback'),
+        document.getElementById('kontaktSubmitBtn'),
+        'form_success_contact'
+      );
+    });
+
+    /* ============================================
+       COUNTRY DROPDOWN: Alle Länder nachladen
+       ============================================ */
+    const countryCode = document.getElementById('countryCode');
     if (countryCode) {
       fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
         .then(res => res.json())
         .then(data => {
           data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-          let options = '<option value="de">Deutschland</option><option value="ch">Schweiz</option><option value="at">Österreich</option><option value="it">Italien</option><option value="fr">Frankreich</option><option disabled>──────────</option>';
+          const lang = document.documentElement.lang || 'de';
+          const topOptions = {
+            de: ['Deutschland', 'Schweiz', 'Österreich', 'Italien', 'Frankreich'],
+            en: ['Germany', 'Switzerland', 'Austria', 'Italy', 'France'],
+            it: ['Germania', 'Svizzera', 'Austria', 'Italia', 'Francia']
+          };
+          const tops = topOptions[lang] || topOptions.de;
+          let options = `<option value="de">${tops[0]}</option>` +
+                        `<option value="ch">${tops[1]}</option>` +
+                        `<option value="at">${tops[2]}</option>` +
+                        `<option value="it">${tops[3]}</option>` +
+                        `<option value="fr">${tops[4]}</option>` +
+                        `<option disabled>──────────</option>`;
           data.forEach(country => {
             const code = country.cca2.toLowerCase();
             if (!['de', 'ch', 'at', 'it', 'fr'].includes(code)) {
@@ -2048,12 +2264,17 @@
         .catch(err => console.error('Error fetching countries:', err));
     }
 
+    /* ============================================
+       PLZ → ORT AUTOFILL
+       ============================================ */
+    const plzInput = document.getElementById('plz');
+    const ortInput = document.getElementById('ort');
+
     if (plzInput && ortInput) {
       plzInput.addEventListener('input', async (e) => {
         const zip = e.target.value.trim();
-        const country = countryCode.value;
+        const country = countryCode ? countryCode.value : 'de';
 
-        // Fetch if length is starting to look valid (4+ digits)
         if (zip.length >= 4) {
           try {
             const response = await fetch(`https://api.zippopotam.us/${country}/${zip}`);

@@ -96,6 +96,27 @@ const languageData = {
         mod_lbl_zip: "ZIP",
         mod_lbl_city: "City",
         mod_btn: "Send request <span class=\"btn__arrow\">→</span>",
+        mod_ph_name: "Your First and Last Name",
+        mod_ph_email: "your@email.com",
+        mod_ph_phone: "+49 123 456789",
+        mod_ph_zip: "12345",
+        mod_ph_city: "City",
+
+        kon_title: "Contact us",
+        kon_note: "Do you have questions, a request, or simply want to reach out? We'd love to hear from you.",
+        kon_lbl_name: "Name",
+        kon_lbl_email: "Email",
+        kon_lbl_message: "Message",
+        kon_ph_message: "Your message...",
+        kon_btn: "Send message <span class=\"btn__arrow\">→</span>",
+
+        form_submitting: "Sending...",
+        form_success_find: "Request sent successfully! A local pastor will get in touch with you soon.",
+        form_success_contact: "Message sent successfully! We'll get back to you soon.",
+        form_error_fields: "Please fill in all fields correctly.",
+        form_error_wait: "Please wait a moment before sending again.",
+        form_error_server: "Server error. Please try again later.",
+        form_error_connection: "Connection error. Please try again.",
 
         foot_desc: "Jesus-centered house church network. Church as it was meant to be – authentic, powerful, and right in the middle of life.",
         foot_col1: "Discover",
@@ -202,6 +223,27 @@ const languageData = {
         mod_lbl_zip: "PLZ",
         mod_lbl_city: "Ort",
         mod_btn: "Anfrage senden <span class=\"btn__arrow\">→</span>",
+        mod_ph_name: "Dein Vor- und Nachname",
+        mod_ph_email: "deine@email.de",
+        mod_ph_phone: "+49 123 456789",
+        mod_ph_zip: "12345",
+        mod_ph_city: "Stadt",
+
+        kon_title: "Kontakt aufnehmen",
+        kon_note: "Hast du Fragen, ein Anliegen oder möchtest du dich einfach melden? Wir freuen uns über deine Nachricht.",
+        kon_lbl_name: "Name",
+        kon_lbl_email: "E-Mail",
+        kon_lbl_message: "Nachricht",
+        kon_ph_message: "Deine Nachricht...",
+        kon_btn: "Nachricht senden <span class=\"btn__arrow\">→</span>",
+
+        form_submitting: "Wird gesendet...",
+        form_success_find: "Anfrage erfolgreich gesendet! Ein lokaler Pastor wird sich bald bei dir melden.",
+        form_success_contact: "Nachricht erfolgreich gesendet! Wir melden uns bald bei dir.",
+        form_error_fields: "Bitte fülle alle Felder korrekt aus.",
+        form_error_wait: "Bitte warte einen Moment, bevor du erneut sendest.",
+        form_error_server: "Serverfehler. Bitte versuche es später erneut.",
+        form_error_connection: "Verbindungsfehler. Bitte versuche es erneut.",
 
         foot_desc: "Jesus-zentriertes Hausgemeinde-Netzwerk. Gemeinde, wie sie gedacht war – authentisch, kraftvoll und mitten im Leben.",
         foot_col1: "Entdecken",
@@ -308,6 +350,27 @@ const languageData = {
         mod_lbl_zip: "CAP",
         mod_lbl_city: "Città",
         mod_btn: "Invia richiesta <span class=\"btn__arrow\">→</span>",
+        mod_ph_name: "Il tuo Nome e Cognome",
+        mod_ph_email: "tua@email.it",
+        mod_ph_phone: "+39 123 456789",
+        mod_ph_zip: "12345",
+        mod_ph_city: "Città",
+
+        kon_title: "Contattaci",
+        kon_note: "Hai domande, una richiesta o vuoi semplicemente scriverci? Saremo felici di sentirti.",
+        kon_lbl_name: "Nome",
+        kon_lbl_email: "Email",
+        kon_lbl_message: "Messaggio",
+        kon_ph_message: "Il tuo messaggio...",
+        kon_btn: "Invia messaggio <span class=\"btn__arrow\">→</span>",
+
+        form_submitting: "Invio in corso...",
+        form_success_find: "Richiesta inviata con successo! Un pastore locale ti contatterà presto.",
+        form_success_contact: "Messaggio inviato con successo! Ti risponderemo presto.",
+        form_error_fields: "Compila correttamente tutti i campi.",
+        form_error_wait: "Attendi un momento prima di inviare di nuovo.",
+        form_error_server: "Errore del server. Riprova più tardi.",
+        form_error_connection: "Errore di connessione. Riprova.",
 
         foot_desc: "Rete di chiese in casa centrata su Gesù. La Chiesa come era stata pensata – autentica, potente e al centro della vita quotidiana.",
         foot_col1: "Scopri",
@@ -325,21 +388,30 @@ const placeholders = {
         mod_ph_email: "your@email.com",
         mod_ph_phone: "+49 123 456789",
         mod_ph_zip: "12345",
-        mod_ph_city: "City"
+        mod_ph_city: "City",
+        kon_ph_name: "Your First and Last Name",
+        kon_ph_email: "your@email.com",
+        kon_ph_message: "Your message..."
     },
     de: {
         mod_ph_name: "Dein Vor- und Nachname",
         mod_ph_email: "deine@email.de",
         mod_ph_phone: "+49 123 456789",
         mod_ph_zip: "12345",
-        mod_ph_city: "Stadt"
+        mod_ph_city: "Stadt",
+        kon_ph_name: "Dein Vor- und Nachname",
+        kon_ph_email: "deine@email.de",
+        kon_ph_message: "Deine Nachricht..."
     },
     it: {
         mod_ph_name: "Il tuo Nome e Cognome",
         mod_ph_email: "tua@email.it",
         mod_ph_phone: "+39 123 456789",
         mod_ph_zip: "12345",
-        mod_ph_city: "Città"
+        mod_ph_city: "Città",
+        kon_ph_name: "Il tuo Nome e Cognome",
+        kon_ph_email: "tua@email.it",
+        kon_ph_message: "Il tuo messaggio..."
     }
 };
 
